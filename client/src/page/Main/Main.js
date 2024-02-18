@@ -54,14 +54,6 @@ const Join = () => {
             onChange={(event) => setRoom(event.target.value)}
           />
         </div>
-        {/* <NavLink
-          onClick={(e) => (!name || !room ? (e.preventDefault()) : null)}
-          to={`/chat?name=${name}&room=${room}`}
-        >
-          <button className={'button mt-20'} type='submit'>
-            가입
-          </button>
-        </NavLink> */}
       </div>
 
       <RoomList 
