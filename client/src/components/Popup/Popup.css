@@ -1,0 +1,8 @@
+.popup-container{
+  border: 1px solid #fff;
+  background-color: #000;
+}
+
+.popup-container p {
+  color: #fff;
+}
