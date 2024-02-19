@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import io from 'socket.io-client';
 import RoomList from '../../components/RommList/RoomList'
-import './Join.css'
+import './Main.css'
 import { API_URL } from '../../config/contansts'
 // let socket;
 
-const Join = () => {
+const Main = () => {
   const [socket, setSocket] = useState(null);
   const [name, setName] = useState('');
   const [room, setRoom] = useState('');
@@ -64,4 +64,4 @@ const Join = () => {
   )
 }
 
-export default Join
+export default Main

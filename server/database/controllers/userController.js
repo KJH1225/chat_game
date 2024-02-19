@@ -6,93 +6,131 @@
 const UserService = require("../services/userService");
 
 class UserController {
-    static async createUser(req,res,next){
-        try {
-            console.log(req.body);
-            const tmp = req.body;
-            console.log("유저컨트롤러에서 받은 tmp: ",tmp);
-            const newUser = await UserService.createUser(tmp);
-            
-            if(newUser.errorMessage){
-                throw new Error(newUser.errorMessage)
-            }
-            res.status(201).json(newUser);
+  static async createUser(req, res, next) {
+    try {
+      console.log("/user/join req.body: ", req.body);
+      const newUser = await UserService.createUser(req.body);
 
-        } catch (error) {
-            next(error)
-        }
+      if (newUser.errorMessage) {
+        throw new Error(newUser.errorMessage);
+      }
+      res.status(201);
+    } catch (error) {
+      next(error);
     }
-    static async loginUser(req,res,next){
-        try {
-            const tmp = req.body;
-            console.log("컨트롤러에서 tmp: ",tmp);
-            const user = await UserService.loginUser(tmp);
-            console.log("userControll.loginUser: ", user);
-            
-            if(user.errorMessage){
-                throw new Error(user.errorMessage);
-            };
+  }
+  static async loginUser(req, res, next) {
+    try {
+      console.log("로그인 req.body: ", req.body);
+      const user = await UserService.loginUser(req.body);
+      console.log("userControll.loginUser: ", user);
 
-            res.cookie('accessToken', user.accessToken, {
-                httpOnly : true,
-                secure : false,
-                sameSite : 'strict',
-            });
-            res.cookie('refreshToken', user.refreshToken, {
-                httpOnly : true,
-                secure : false,
-                sameSite : 'strict',
-            });
-            console.log("req.cookie.accessToken: ", req.cookies.accessToken);
-            console.log("req.cookie.accessToken: ", req.cookies.refreshToken);
-            res.status(200).end();
-        } catch (error) {
-            next(error)
-        }
+      if (user.errorMessage) {
+        throw new Error(user.errorMessage);
+      }
+
+      res.cookie("accessToken", user.accessToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "strict",
+      });
+      res.cookie("refreshToken", user.refreshToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "strict",
+      });
+      res.status(200).end();
+    } catch (error) {
+      next(error);
     }
-    static async detailUser(req, res, next){
-        try{
-            const id = req.userId;
-            // const id = 1;
-            console.log("id: ",id);
-            const user = await UserService.detailUser({id});
+  }
 
-            // console.log("res임니다요: ",res);
-            res.status(200).json(user)
-        }catch(error){
-            next(error)
-        }
+
+
+  static async checkPassword(req, res, next) {
+    try {
+      const user_id = req.user_id;
+      const user_pwd = req.body.pwd;
+      console.log("컨트롤러에서 pwd: ", user_pwd);
+      const user = await UserService.checkPassword({user_id, user_pwd});
+      console.log("userControll.loginUser: ", user);
+
+      if (user.errorMessage) {
+        throw new Error(user.errorMessage);
+      }
+
+      res.status(200).json({"status": user});
+    } catch (error) {
+      next(error);
     }
+  }
 
-    static async putUser(req, res, next){
-        try{
-            const userId = req.userId;
-            // const userId = 1;
-            const {...props} = req.body;
-            const toUpdate = {...props};
-            // const updateValue = req.body;
-            console.log("userController/updateValue: ", toUpdate, userId);
-            const user = await UserService.putUser({toUpdate, userId});
-
-            // console.log("res임니다요: ",res);
-            res.status(200).json(user)
-        }catch(error){
-            next(error)
-        }
+  static async getAllUser(req, res, next) {
+    try {
+      const user = await UserService.getAllUser();
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
     }
+  }
 
-    static async deleteUser(req, res, next){
-        try{
-            const userId = req.userId;
-            // const userId = 1;
-            console.log("userController/deleteUser: ", userId);
-            const user = await UserService.deleteUser({userId});
 
-            // console.log("res임니다요: ",res);
-            res.status(200).json(user)
-        }catch(error){
-            next(error)
-        }
+  static async detailUser(req, res, next) {
+    try {
+      const userId = req.user_id;
+      // const id = "rlarorn@naver.com";
+      console.log("userId: ", userId);
+      const user = await UserService.detailUser({ userId });
+
+      // console.log("res임니다요: ",res);
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
     }
+  }
+
+  static async patchUser(req, res, next) {
+    try {
+      const user_id = req.user_id;
+      // const userId = 1;
+      const toUpdate = { ...req.body };
+      // const updateValue = req.body;
+      console.log("userController/updateValue: ", toUpdate, user_id);
+      const user = await UserService.patchUser({ toUpdate, user_id });
+
+      // console.log("res임니다요: ",res);
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async deleteUser(req, res, next) {
+    try {
+      const user_id = req.user_id;
+      // const userId = 1;
+      console.log("userController/deleteUser: ", user_id);
+      const user = await UserService.deleteUser({ user_id });
+
+      // console.log("res임니다요: ",res);
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async deleteAdminUser(req, res, next) {
+    try {
+      const user_id = req.params.user_id;
+      // const userId = 1;
+      console.log("userController/deleteUser: ", user_id);
+      const user = await UserService.deleteAdminUser({ user_id });
+
+      // console.log("res임니다요: ",res);
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 module.exports = UserController;
