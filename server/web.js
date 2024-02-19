@@ -11,13 +11,11 @@ const cors = require('cors');
 const { sequelize } = require("./database/schemas"); //DB테이블
 
 const errorMiddleware = require("./utils/errorMiddleware");
-const router = require('./routers/router');
-const { addUser, removeUser, getUser, getUsersInRoom, getAllUser } = require('./utils/user');
-const { addRoom, removeRoom, addUserToRoom, removeUserFromRoom, getRooms } = require('./utils/room');  // 방 관리 모듈
+const userRouter = require('./routers/userRouter');
 
 //시퀄라이즈 연결 부분
 sequelize
-  .sync({ force: false}) //force가 true면 킬때마다 DB 새로 만듬
+  .sync({ force: false }) //force가 true면 킬때마다 DB 새로 만듬
   .then(() => {
     console.log("DB연결 성공");
   })
@@ -34,7 +32,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
 
-app.use(router);
+app.use('/api/user', userRouter);
 app.use(errorMiddleware);
 
 //소켓부분?
