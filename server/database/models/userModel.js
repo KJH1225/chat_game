@@ -43,7 +43,7 @@ class UserModel {
 
   static async getAllUser(){
     const user = await User.findAll({
-      attributes: ["user_id", "user_email", "user_name", "user_phone", "sns_type", "created_at"]
+      attributes: ["user_id", "user_email", "user_nick_name", "createdAt"]
     })
     console.log(user);
     return user;

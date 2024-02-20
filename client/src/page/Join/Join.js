@@ -23,15 +23,14 @@ const Join = () => {
     console.log("onSubmit: ", data);
     try {
       const res = await axios.post(`${API_URL}/api/user/join`, data);
-      console.log("회원가입 요청 res: ", res);
+      alert('가입 성공!');
       navigate('/');
     } catch (err) {
-				console.error(err.response.data.message);
-				alert(`가입 실패!\n${err.response.data.message}`);
+      console.error(err.response.data.message);
+      alert(`가입 실패!\n${err.response.data.message}`);
     }
   }
 
-  // console.log("watch: ", watch());
 
   return (
     <div className='joinOuterContainer'>

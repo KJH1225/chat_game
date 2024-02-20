@@ -6,6 +6,7 @@
 const UserService = require("../services/userService");
 
 class UserController {
+
   static async createUser(req, res, next) {
     try {
       console.log("/user/join req.body: ", req.body);
@@ -14,11 +15,12 @@ class UserController {
       if (newUser.errorMessage) {
         throw new Error(newUser.errorMessage);
       }
-      res.status(201);
+      res.status(201).end();
     } catch (error) {
       next(error);
     }
   }
+
   static async loginUser(req, res, next) {
     try {
       console.log("로그인 req.body: ", req.body);
@@ -45,7 +47,19 @@ class UserController {
     }
   }
 
+  static async getNickName(req, res, next) {
+    try {
+      const userId = req.user_id;
+      // const id = "rlarorn@naver.com";
+      console.log("userId: ", userId);
+      const { user_nick_name } = await UserService.detailUser({ userId });
 
+      console.log("user_nick_name: ",user_nick_name);
+      res.status(200).json({user_nick_name});
+    } catch (error) {
+      next(error);
+    }
+  }
 
   static async checkPassword(req, res, next) {
     try {

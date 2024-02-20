@@ -9,45 +9,14 @@ export const loginState = atom({
   effects_UNSTABLE: [persistAtom],
 })
 
-export const startDateState = atom({
-  key: 'startDateState',
-  default: '2023-11-17',
-  effects_UNSTABLE: [persistAtom],
-})
-
-
-export const timeState = atom({
-  key: 'timeState',
+export const nameState = atom({
+  key: 'nameState',
   default: '',
   effects_UNSTABLE: [persistAtom],
 })
 
-export const plannerState = atom({
-  key: 'plannerState',
-  default: '',
-  effects_UNSTABLE: [persistAtom],
-})  
-
-export const plannerIdState = atom({
-  key: 'plannerIdState',
-  default: '',
-  effects_UNSTABLE: [persistAtom],
-})
-
-export const pointState = atom({
-  key: 'pointState',
-  default: '',
-  effects_UNSTABLE: [persistAtom],
-})
-
-export const contactChoiceState = atom({
-  key: 'contactChoiceState',
-  default: '',
-  effects_UNSTABLE: [persistAtom],
-})
-
-export const themeState = atom({
-  key: 'themeState',
+export const roomState = atom({
+  key: 'roomState',
   default: '',
   effects_UNSTABLE: [persistAtom],
 })

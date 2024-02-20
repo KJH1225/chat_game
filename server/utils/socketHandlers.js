@@ -8,14 +8,15 @@ module.exports = (io) => {
 
     // 'join' 이벤트를 처리하는 부분
     socket.on('join', ({ name, room }, callback) => {
+      console.log("join 이벤트 발생: ", name, room);
 
-      
       // addUser 함수를 사용하여 사용자를 추가하고, 추가된 사용자 정보와 에러 여부를 가져오기
       const { error, user } = addUser({ id: socket.id, name, room });
       console.log("사용자 목록: ", getAllUser());
       
       // 에러가 발생한 경우, 클라이언트에 에러 메시지를 콜백 함수를 통해 전달하고 함수 종료
       if (error) {
+        console.log("소켓 join 에러: ", error);
         callback({ error: '아이디 중복' })
       }else {
         //방 생성 
@@ -51,7 +52,7 @@ module.exports = (io) => {
       }
     });
 
-    //* 클라이언트로부터 메시지 수신
+    //* 클라이언트로부터 방 조회 메시지 수신
     socket.on('roomList', () => { // reply라는 이벤트로 송신오면   메세지가 data인수에 담김
       const rooms = getRooms();
       console.log("rooms: ", rooms);
@@ -71,6 +72,12 @@ module.exports = (io) => {
 
       // 클라이언트에서 제공된 콜백 함수 호출하여 클라이언트 측의 작업 완료 신호 전달
       callback();
+    });
+
+    //* 클라이언트로부터 방 조회 메시지 수신
+    socket.on('gameStart', () => { // reply라는 이벤트로 송신오면   메세지가 data인수에 담김
+      const user = getUser(socket.id);
+      io.to(user.room).emit('gameStart');
     });
 
     

@@ -9,21 +9,13 @@ import './Messages.css'
 const Messages = ({ messages, name, user }) => {
   console.log("messages: ", name);
   
-  // 2:2를 제외한 요소들을 필터링
   const [lastItem, setLastItem] = useState();
-  // setTimeout(() => { lastItem = null }, 5000);
   
   useEffect(() => {
     const filteredArray = messages.filter(item => item.user == user.name);
     const lastItem = filteredArray.pop();
     setLastItem(lastItem);
-    // setTimeout(() => { setLastItem(null); }, 5000);
-  })
-
-  
-
-
-  console.log("lastItem: ", lastItem);
+  }, [messages]);
 
   return (
     // <ScrollToBottom className='messages'>
