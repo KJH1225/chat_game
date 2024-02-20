@@ -131,16 +131,14 @@ class UserService{
 	static async detailUser({userId}){
 		const user = await UserModel.findOneUserId({user_id: userId});
 		// console.log({myId});
-		const name = user.user_name;
-		const pwd = user.user_pwd;
-		const phone = user.user_phone;
-		const email = user.user_email;
 		const user_id = user.user_id;
+		const user_nick_name = user.user_nick_name;
+		const pwd = user.user_pwd;
+		const email = user.user_email;
 		const userInfo = {
 			user_id,
-			name,
+			user_nick_name,
 			pwd,
-			phone,
 			email,
 		};
 
@@ -149,11 +147,6 @@ class UserService{
 
 	static async patchUser({toUpdate, user_id}){
 		console.log("서비스에서: ",toUpdate, user_id);
-		// const email = toUpdate.user_name;
-		// const phone = toUpdate.phoneNumberPrefix + toUpdate.phoneNumberSuffix;
-		// const address = toUpdate.address;
-		// const detail_address = toUpdate.detail_address;
-		// const birth = toUpdate.selectedYear+'-'+toUpdate.selectedMonth+'-'+toUpdate.selectedDay;
 
 		//crypto.randomBytes(128): 길이가 128인 임의의 바이트 시퀀스를 생성
 		//.toString('base64'): 임의의 바이트를 base64로 인코딩된 문자열로 변환
@@ -162,7 +155,7 @@ class UserService{
 		//.update(pwd + salt): 비밀번호( pwd)와 솔트를 연결하여 해시를 업데이트
 		//.digest('hex'): 16진수 형식으로 최종 해시를 생성
 		const update = {
-			user_name: toUpdate.user_name,
+			user_nick_name: toUpdate.user_nick_name,
 			user_phone: toUpdate.user_phone,
 		};
 		if(toUpdate.user_pwd) {
@@ -176,11 +169,6 @@ class UserService{
 				update.hashPassword = hashPassword;
 		}
 
-		// update.user_name = toUpdate.user_name;
-		// update.phone = toUpdate.phone_number_prefix + toUpdate.phone_number_suffix;
-		// update.address = toUpdate.address;
-		// update.detail_address = toUpdate.detail_address;
-		// update.birth = toUpdate.selectedYear+'-'+toUpdate.selectedMonth+'-'+toUpdate.selectedDay;
 		console.log(update);
 
 		const user = await UserModel.patchUser({update, user_id});

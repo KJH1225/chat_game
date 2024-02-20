@@ -1,26 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
+import { useRecoilState } from "recoil";
+import { nameState, roomState } from "../../recoil/atoms/State";
+import { API_URL } from '../../config/contansts';
 import './Chat.css';
+
 import InfoBar from '../../components/InfoBar/InfoBar';
 import Messages from '../../components/Messages/Messages';
 import Input from '../../components/Input/Input';
 import TextContainer from '../../components/TextContainer/TextContainer';
 import Popup from '../../components/Popup/Popup';
-import { API_URL } from '../../config/contansts';
 
 // 소켓 연결을 담당할 변수
 let socket;
 
-
 const Chat = () => {
   // 사용할 state들을 정의
-  const [name, setName] = useState('');
-  const [room, setRoom] = useState('');
+  const [name, setName] = useRecoilState(nameState); //useState와 거의 비슷한 사용법
+  const [room, setRoom] = useRecoilState(roomState); //useState와 거의 비슷한 사용법
   const [users, setUsers] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [popup, setPopup] = useState(false);
+  const [gameStatus, setGameStatus] = useState(false);
 
   // React Router를 사용하여 URL의 쿼리 파라미터를 가져오기 위한 hook
   const [searchParams, setSearchParams] = useSearchParams();
@@ -29,9 +32,9 @@ const Chat = () => {
 
   // 페이지가 처음 로드될 때와 엔드포인트 또는 쿼리 파라미터가 변경될 때 실행
   useEffect(() => {
-    // 쿼리 파라미터에서 'name'과 'room' 값을 가져오기
-    const name = searchParams.get('name');
-    const room = searchParams.get('room');
+      
+    console.log("name: ", name);
+    console.log("room: ", room);
 
     // 소켓 연결 설정
     socket = io(API_URL, {
@@ -39,10 +42,6 @@ const Chat = () => {
           origin: "*",
       }
     });
-
-    // state 업데이트
-    setRoom(room);
-    setName(name);
 
     // 서버에 'join' 이벤트를 emit하여 사용자를 방에 추가
     socket.emit('join', { name, room }, (error) => {
@@ -72,6 +71,20 @@ const Chat = () => {
       setUsers(users);
     });
 
+    // 클라이언트에서 'roomList' 이벤트 수신
+    socket.on('gameStart', async () => {
+      const wait = (timeToDelay) => new Promise((resolve) => setTimeout(resolve, timeToDelay))
+      // 서버로부터 전달받은 방 목록을 콘솔에 출력
+      setPopup(true);
+
+      await wait(5000); //5초기다리기
+      setPopup(false); 
+      setGameStatus(true);
+
+      await wait(10000); //10초기다리기
+      setGameStatus(false);
+    });
+
     // 페이지 언마운트 시 소켓 연결 해제
     return () => {
       socket.disconnect();
@@ -98,13 +111,11 @@ const Chat = () => {
         {/* 채팅창 상단바 컴포넌트 */}
         <InfoBar room={room} />
 
-        {/* <div className='user'>
-          {users && users.map((user, index) => (
-            <div>
-              <h1 style={{color: "#fff" }}>{user.name}</h1>
-            </div>
-          ))}
-        </div> */}
+        {gameStatus && 
+          <div>
+            게임 시작시 나올 이미지 컴포넌트
+          </div>
+        }
 
         {/* 메세지 출력 부분 */}
         <div className='users'>
@@ -121,13 +132,11 @@ const Chat = () => {
         />
       </div>
 
-      {/* 채팅창 오른쪽 TextContainer 컴포넌트 */}
       <TextContainer users={users} />
       {popup && <Popup />}
       <button onClick={() => {
-                setPopup(true);
-                setTimeout(() => { setPopup(false); }, 5000);
-              }}>
+        socket.emit('gameStart');
+      }}>
         시작
       </button>
     </div>

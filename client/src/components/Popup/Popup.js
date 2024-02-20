@@ -4,7 +4,7 @@ import './Popup.css';
 const Popup = () => {
   return (
     <div className="popup-container">
-      <p>팝업입니다.</p>
+      <p>5초 후 시작합니다.</p>
     </div>
   )
 }
